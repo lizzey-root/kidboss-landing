@@ -897,23 +897,22 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Waitlist form → Google Sheets
+    // Waitlist form → Google Sheets (via GET to avoid CORS)
     document.getElementById('waitlist-form').addEventListener('submit', function(e) {
       e.preventDefault();
+      const form = this;
       const email = document.getElementById('email-input').value;
       const btn = document.getElementById('submit-btn');
       btn.textContent = 'Sending...';
       btn.disabled = true;
 
-      fetch('https://script.google.com/macros/s/AKfycbzDpVKVk6GVxcrsXk3A7cOzN2sCz0AKs4DYhNSmGrdpM0ddV7lTvGa7o5IuG4IYS2MH/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
-      }).then(() => {
-        this.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzDpVKVk6GVxcrsXk3A7cOzN2sCz0AKs4DYhNSmGrdpM0ddV7lTvGa7o5IuG4IYS2MH/exec';
+      const url = scriptUrl + '?email=' + encodeURIComponent(email);
+
+      fetch(url, { method: 'GET', mode: 'no-cors' }).then(() => {
+        form.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
       }).catch(() => {
-        this.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
+        form.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
       });
     });
 
