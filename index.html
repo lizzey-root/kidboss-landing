@@ -865,9 +865,9 @@
       <div class="reveal">
         <h2 class="section-title" style="font-size: clamp(2rem, 5vw, 3.5rem); color: var(--white);">Ready to Join the<br><span class="kid">Kid</span><span class="boss">Boss</span> World?</h2>
         <p>Be the first to know when episodes drop and products launch. Sign up for early access — no adults allowed (okay, fine, parents too).</p>
-        <form class="email-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=\'font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);\'>You\'re on the list! 🎉</p>'; ">
-          <input type="email" placeholder="your@email.com" required>
-          <button type="submit">Count Me In</button>
+        <form class="email-form" id="waitlist-form">
+          <input type="email" id="email-input" placeholder="your@email.com" required>
+          <button type="submit" id="submit-btn">Count Me In</button>
         </form>
       </div>
     </div>
@@ -896,6 +896,26 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Waitlist form → Google Sheets
+    document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value;
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      fetch('https://script.google.com/macros/s/AKfycbzDpVKVk6GVxcrsXk3A7cOzN2sCz0AKs4DYhNSmGrdpM0ddV7lTvGa7o5IuG4IYS2MH/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }).then(() => {
+        this.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
+      }).catch(() => {
+        this.innerHTML = '<p style="font-family: Baloo 2, cursive; font-size: 1.4rem; font-weight: 700; color: var(--yellow);">You\'re on the list! 🎉</p>';
+      });
+    });
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
