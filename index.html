@@ -906,7 +906,7 @@
       btn.textContent = 'Sending...';
       btn.disabled = true;
 
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzBZ2usJAN-01SPv9_LxRNGnX7tww3cs5FGR8CkKHlfSQX9h7-8BKGO2gR3qypSAaKq/exec';
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzYgye8Ff6lFIJHwZX-Y9qvPmR8mjm2jbGdTevjP3iJyyfYJIxaxTnxUZR1Qao3GzI0/exec';
       const url = scriptUrl + '?email=' + encodeURIComponent(email);
 
       fetch(url, { method: 'GET', mode: 'no-cors' }).then(() => {
